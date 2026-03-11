@@ -2,13 +2,39 @@ import { auth, signOut } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
+interface Lead {
+  id: string;
+  fullName: string;
+  email: string;
+  organisation: string;
+  website: string | null;
+  country: string;
+  createdAt: Date;
+}
+
 export default async function DashboardPage() {
   const session = await auth();
   if (!session) redirect("/admin/login");
 
-  const leads = await prisma.lead.findMany({
+  const leads: Lead[] = await prisma.lead.findMany({
     orderBy: { createdAt: "desc" },
   });
+
+  const now = new Date();
+  const thisMonthCount = leads.filter((l: Lead) => {
+    const d = new Date(l.createdAt);
+    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+  }).length;
+
+  const topCountry = (() => {
+    if (leads.length === 0) return "N/A";
+    const counts: Record<string, number> = {};
+    leads.forEach((l: Lead) => {
+      counts[l.country] = (counts[l.country] || 0) + 1;
+    });
+    const sorted = Object.entries(counts).sort(([, a], [, b]) => b - a);
+    return sorted[0]?.[0] || "N/A";
+  })();
 
   return (
     <div style={{
@@ -41,7 +67,7 @@ export default async function DashboardPage() {
               margin: 0,
             }}>Leads Dashboard</h1>
             <p style={{ fontSize: "0.76rem", color: "#5a6a88", margin: 0 }}>
-              Training & Education Enquiries
+              Training &amp; Education Enquiries
             </p>
           </div>
         </div>
@@ -111,11 +137,7 @@ export default async function DashboardPage() {
             This Month
           </p>
           <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 700, color: "#1a3a6b", margin: 0 }}>
-            {leads.filter((l: any) => {
-              const now = new Date();
-              const d = new Date(l.createdAt);
-              return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-            }).length}
+            {thisMonthCount}
           </p>
         </div>
         <div style={{
@@ -130,15 +152,7 @@ export default async function DashboardPage() {
             Top Country
           </p>
           <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#1a3a6b", margin: 0 }}>
-            {(() => {
-              if (leads.length === 0) return "N/A";
-              const counts: Record<string, number> = {};
-              leads.forEach((l: any) => {
-                counts[l.country] = (counts[l.country] || 0) + 1;
-              });
-              const sorted = Object.entries(counts).sort(([, a], [, b]) => b - a);
-              return sorted[0]?.[0] || "N/A";
-            })()}
+            {topCountry}
           </p>
         </div>
       </div>
@@ -193,7 +207,7 @@ export default async function DashboardPage() {
               }}>
                 <thead>
                   <tr style={{ borderBottom: "2px solid rgba(26,58,107,0.08)" }}>
-                    {["Name", "Email", "Organisation", "Website", "Country", "Date"].map(h => (
+                    {["Name", "Email", "Organisation", "Website", "Country", "Date"].map((h: string) => (
                       <th key={h} style={{
                         padding: "14px 20px",
                         textAlign: "left",
@@ -208,7 +222,7 @@ export default async function DashboardPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {leads.map((lead) => (
+                  {leads.map((lead: Lead) => (
                     <tr
                       key={lead.id}
                       style={{ borderBottom: "1px solid rgba(26,58,107,0.06)" }}
