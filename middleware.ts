@@ -1,17 +1,20 @@
-import { auth } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export default auth((req: NextRequest & { auth?: unknown }) => {
-  const isLoggedIn = !!req.auth;
-  const isAdminRoute = req.nextUrl.pathname.startsWith("/admin/dashboard");
+export function middleware(request: NextRequest) {
+  // Get the session token (works for both secure and non-secure cookies)
+  const sessionToken = 
+    request.cookies.get("__Secure-authjs.session-token")?.value || 
+    request.cookies.get("authjs.session-token")?.value;
 
-  if (isAdminRoute && !isLoggedIn) {
-    return NextResponse.redirect(new URL("/admin/login", req.url));
+  const isAdminRoute = request.nextUrl.pathname.startsWith("/admin/dashboard");
+
+  if (isAdminRoute && !sessionToken) {
+    return NextResponse.redirect(new URL("/admin/login", request.url));
   }
 
   return NextResponse.next();
-});
+}
 
 export const config = {
   matcher: ["/admin/dashboard/:path*"],
