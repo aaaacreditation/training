@@ -130,14 +130,15 @@ export default async function DashboardPage() {
             Top Country
           </p>
           <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#1a3a6b", margin: 0 }}>
-            {leads.length > 0
-              ? Object.entries(
-                  leads.reduce<Record<string, number>>((acc, l: any) => {
-                    acc[l.country] = (acc[l.country] || 0) + 1;
-                    return acc;
-                  }, {})
-                ).sort(([, a], [, b]) => b - a)[0]?.[0] || "N/A"
-              : "N/A"}
+            {(() => {
+              if (leads.length === 0) return "N/A";
+              const counts: Record<string, number> = {};
+              leads.forEach((l: any) => {
+                counts[l.country] = (counts[l.country] || 0) + 1;
+              });
+              const sorted = Object.entries(counts).sort(([, a], [, b]) => b - a);
+              return sorted[0]?.[0] || "N/A";
+            })()}
           </p>
         </div>
       </div>
