@@ -111,7 +111,7 @@ export default async function DashboardPage() {
             This Month
           </p>
           <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 700, color: "#1a3a6b", margin: 0 }}>
-            {leads.filter(l => {
+            {leads.filter((l: any) => {
               const now = new Date();
               const d = new Date(l.createdAt);
               return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
@@ -132,7 +132,7 @@ export default async function DashboardPage() {
           <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#1a3a6b", margin: 0 }}>
             {leads.length > 0
               ? Object.entries(
-                  leads.reduce<Record<string, number>>((acc, l) => {
+                  leads.reduce<Record<string, number>>((acc, l: any) => {
                     acc[l.country] = (acc[l.country] || 0) + 1;
                     return acc;
                   }, {})
