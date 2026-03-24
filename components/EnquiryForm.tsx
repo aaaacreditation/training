@@ -121,9 +121,9 @@ export default function EnquiryForm() {
           <div className="form-group">
             <label>Website</label>
             <input
-              type="url"
+              type="text"
               name="website"
-              placeholder="https://yourcompany.com"
+              placeholder="example.com"
               value={formData.website}
               onChange={handleChange}
             />
