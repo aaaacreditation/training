@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, FormEvent } from "react";
+import { useRouter } from "next/navigation";
 
 export default function EnquiryForm() {
   const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ export default function EnquiryForm() {
   });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -29,9 +31,7 @@ export default function EnquiryForm() {
       });
 
       if (res.ok) {
-        setStatus("success");
-        setMessage("Thank you! We'll be in touch within one business day.");
-        setFormData({ fullName: "", email: "", organisation: "", website: "", country: "" });
+        router.push("/thank-you");
       } else {
         const data = await res.json();
         setStatus("error");

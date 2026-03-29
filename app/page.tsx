@@ -56,9 +56,9 @@ export default function LandingPage() {
         <ModalTrigger className="btn-primary">
           Start Your Application
         </ModalTrigger>
-        <ModalTrigger className="btn-outline">
+        <a href="https://calendly.com/accreditationaaa/consultation-call-am" className="btn-outline" target="_blank" rel="noopener noreferrer">
           Free 30-Min Consultation
-        </ModalTrigger>
+        </a>
       </div>
     </div>
     <div className="hero-right fade-up delay-2">
