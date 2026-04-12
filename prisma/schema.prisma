@@ -21,6 +21,8 @@ model Lead {
   email        String
   organisation String
   website      String?
+  phone        String?
   country      String
+  comments     String?
   createdAt    DateTime @default(now())
 }

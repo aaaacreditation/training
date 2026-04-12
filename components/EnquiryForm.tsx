@@ -9,13 +9,15 @@ export default function EnquiryForm() {
     email: "",
     organisation: "",
     website: "",
+    phone: "",
     country: "",
+    comments: "",
   });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
   const router = useRouter();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
@@ -119,6 +121,16 @@ export default function EnquiryForm() {
             />
           </div>
           <div className="form-group">
+            <label>Phone Number</label>
+            <input
+              type="tel"
+              name="phone"
+              placeholder="+1 234 567 890"
+              value={formData.phone}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
             <label>Website</label>
             <input
               type="text"
@@ -143,6 +155,22 @@ export default function EnquiryForm() {
               <option>South Africa</option>
               <option>Other</option>
             </select>
+          </div>
+
+          <div className="form-group">
+            <label>Comments</label>
+            <textarea
+              name="comments"
+              placeholder="Any additional information you'd like to share…"
+              value={formData.comments}
+              onChange={handleChange}
+              rows={3}
+              style={{
+                width: "100%",
+                resize: "vertical",
+                fontFamily: "'DM Sans', sans-serif",
+              }}
+            />
           </div>
 
           {status === "error" && (

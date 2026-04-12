@@ -8,7 +8,9 @@ interface Lead {
   email: string;
   organisation: string;
   website: string | null;
+  phone: string | null;
   country: string;
+  comments: string | null;
   createdAt: Date;
 }
 
@@ -207,7 +209,7 @@ export default async function DashboardPage() {
               }}>
                 <thead>
                   <tr style={{ borderBottom: "2px solid rgba(26,58,107,0.08)" }}>
-                    {["Name", "Email", "Organisation", "Website", "Country", "Date"].map((h: string) => (
+                    {["Name", "Email", "Phone", "Organisation", "Website", "Country", "Comments", "Date"].map((h: string) => (
                       <th key={h} style={{
                         padding: "14px 20px",
                         textAlign: "left",
@@ -236,6 +238,15 @@ export default async function DashboardPage() {
                         </a>
                       </td>
                       <td style={{ padding: "14px 20px", color: "#5a6a88" }}>
+                        {lead.phone ? (
+                          <a href={`tel:${lead.phone}`} style={{ color: "#1a3a6b", textDecoration: "none" }}>
+                            {lead.phone}
+                          </a>
+                        ) : (
+                          <span style={{ color: "#b0b8cd" }}>—</span>
+                        )}
+                      </td>
+                      <td style={{ padding: "14px 20px", color: "#5a6a88" }}>
                         {lead.organisation}
                       </td>
                       <td style={{ padding: "14px 20px", color: "#5a6a88" }}>
@@ -255,6 +266,18 @@ export default async function DashboardPage() {
                           fontSize: "0.78rem",
                           fontWeight: 500,
                         }}>{lead.country}</span>
+                      </td>
+                      <td style={{ padding: "14px 20px", color: "#5a6a88", fontSize: "0.82rem", maxWidth: 200 }}>
+                        {lead.comments ? (
+                          <span title={lead.comments} style={{
+                            display: "-webkit-box",
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: "vertical" as const,
+                            overflow: "hidden",
+                          }}>{lead.comments}</span>
+                        ) : (
+                          <span style={{ color: "#b0b8cd" }}>—</span>
+                        )}
                       </td>
                       <td style={{ padding: "14px 20px", color: "#5a6a88", fontSize: "0.82rem" }}>
                         {new Date(lead.createdAt).toLocaleDateString("en-GB", {

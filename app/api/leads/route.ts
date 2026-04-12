@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { fullName, email, organisation, website, country } = body;
+    const { fullName, email, organisation, website, phone, country, comments } = body;
 
     if (!fullName || !email || !organisation || !country) {
       return NextResponse.json(
@@ -20,7 +20,9 @@ export async function POST(req: NextRequest) {
         email,
         organisation,
         website: website || null,
+        phone: phone || null,
         country,
+        comments: comments || null,
       },
     });
 
